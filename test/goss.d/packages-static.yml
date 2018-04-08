@@ -1,0 +1,8 @@
+---
+package:
+  'glibc-static':   { installed: true }
+  'openssl-static':
+    installed: true
+    versions: [1.0.1k]
+  'pcre-static':    { installed: true }
+  'zlib-static':    { installed: true }

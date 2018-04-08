@@ -1,0 +1,16 @@
+---
+command:
+  "sudo -u rust bash -lc 'cargo --version'":
+    exit-status: 0
+
+  "sudo -u rust bash -lc 'rustc --version'":
+    exit-status: 0
+
+file:
+  # ensure all toolchains are installed
+  '/home/rust/.rustup/toolchains/stable-x86_64-unknown-linux-gnu':
+    exists: true
+  '/home/rust/.rustup/toolchains/beta-x86_64-unknown-linux-gnu':
+    exists: true
+  '/home/rust/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu':
+    exists: true

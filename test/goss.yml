@@ -1,0 +1,4 @@
+---
+gossfile:
+  "goss.d/*.yml": {}
+  "goss.d/*.yaml": {}

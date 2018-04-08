@@ -1,0 +1,9 @@
+---
+user:
+  'rust':
+    exists: true
+    uid: 1000
+    gid: 1000
+    groups:
+      - sudo
+    home: /home/rust

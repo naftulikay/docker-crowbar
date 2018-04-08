@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+
+source "/usr/lib/bash/logging.sh"
+
+CURRENT_USER="${CURRENT_USER:-$USER}"
+CURRENT_GROUP="${CURRENT_GROUP:-$(id -g -n)}"
+
+CURRENT_UID="${CURRENT_UID:-$(id -u)}"
+CURRENT_GID="${CURRENT_GID:-$(id -g)}"
+
+# override these
+USER_UID="${USER_UID:-$CURRENT_UID}"
+USER_GID="${USER_GID:-$CURRENT_GID}"
+
+
+function .remap-uid() {
+  .info "Modifying user id for $CURRENT_USER ($CURRENT_UID => $USER_UID)"
+  usermod -o -u $USER_UID $CURRENT_USER
+}
+
+function .remap-gid() {
+  .info "Modifying group id for $CURRENT_USER ($CURRENT_GID => $USER_GID)"
+  groupmod -o -g $USER_GID $CURRENT_GROUP
+}
+
+function .fix-permissions() {
+  find /home/${CURRENT_USER}/ -exec chown ${USER_UID}:${USER_GID} -R {} \;
+}
+
+function .main() {
+  if [ "$CURRENT_UID" != "$USER_UID" -o "$CURRENT_GID" != "$USER_GID" ]; then
+    if [ "$CURRENT_UID" != "$USER_UID" ]; then
+      .info "Current UID (${CURRENT_UID}) does not match destination UID (${USER_UID})."
+      .remap-uid
+    fi
+
+    if [ "$CURRENT_GID" != "$USER_GID" ]; then
+      .info "Current GID (${CURRENT_GID}) does not match destination GID (${USER_GID})."
+      .remap-gid
+    fi
+
+    .info "Fixing file ownership..."
+    .fix-permissions
+  fi
+}
+
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+  set -e
+  .main $@
+fi

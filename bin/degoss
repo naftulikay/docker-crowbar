@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+function .latest_release {
+  curl -is https://github.com/aelsabbahy/goss/releases/latest | \
+    grep -iP '^location:' | \
+    awk '{print $2;}' | \
+    grep -ioP 'v\d+\.\d+\.\d+\b'
+}
+
+function .main() {
+  local workdir="$(mktemp -d)"
+
+  (
+    cd "$workdir"
+
+    local latest_release="$(.latest_release)"
+    echo "Installing Goss ${latest_release}..."
+
+    mkdir -p bin/
+    curl -sSL -o bin/goss https://github.com/aelsabbahy/goss/releases/download/${latest_release}/goss-linux-amd64
+    chmod +x bin/goss
+
+    bin/goss -g $1 validate --format rspecish
+  )
+
+  rm -r "$workdir"
+
+  if [ "${DEBUG:-false}" != "true" ]; then
+    # remove the goss file
+    rm $1
+    # remove the script itself
+    rm $0
+  fi
+}
+
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+  set -e
+  .main $@
+fi
