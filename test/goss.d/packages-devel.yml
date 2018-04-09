@@ -1,0 +1,14 @@
+---
+package:
+  'binutils-devel': { installed: true }
+  'kernel-devel':   { installed: true }
+  'libcurl-devel':  { installed: true }
+  'libffi-devel':   { installed: true }
+  'openssl-devel':
+    installed: true
+    versions: [1.0.1k]
+  'pcre-devel':     { installed: true }
+  'python26-devel': { installed: true }
+  'python34-devel': { installed: true }
+  'xz-devel':       { installed: true }
+  'zlib-devel':     { installed: true }

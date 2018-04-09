@@ -1,0 +1,5 @@
+/.ansible/galaxy-roles
+/.vagrant
+/requirements.yml
+/vagrant.yml
+/Vagrantfile

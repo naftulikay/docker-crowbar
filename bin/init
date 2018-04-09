@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+set -e
+
+source "/usr/lib/bash/logging.sh"
+
+RUST_USER="rust"
+
+# remap UID/GID if necessary
+CURRENT_USER="${RUST_USER}" \
+    CURRENT_GROUP="${RUST_USER}" \
+    CURRENT_UID="$(id -u "${RUST_USER}")" \
+    CURRENT_GID="$(id -g "${RUST_USER}")" \
+    USER_UID="$USER_UID" \
+    USER_GID="$USER_GID" \
+  id-remap
+
+CURRENT_USER_HOME="$(eval echo ~$RUST_USER)"
+
+export PATH="$CURRENT_USER_HOME/.cargo/bin:$CURRENT_USER_HOME/.local/bin:$PATH"
+
+if [ $# -eq 0 ]; then
+  exec sudo -u "$RUST_USER" PATH="$PATH" bash -l
+else
+  executable="$1" && shift
+
+  if echo "$executable" | grep -qP '\s' ; then
+    # if we have what looks like a bash script just pipe it into bash
+    echo "$executable" | sudo -u "$RUST_USER" PATH="$PATH" bash -l -s
+    while [ $# -gt 0 ]; do
+      echo "$1" | sudo -u "$RUST_USER" PATH="$PATH" bash -l -s
+      shift
+    done
+  elif ! which "$executable" >/dev/null 2>&1 ; then
+    .error "ERROR: executable '$executable' not found" >&2
+    exit 255
+  else
+    exec sudo -u "$RUST_USER" PATH="$PATH" $(which "${executable}") $@
+  fi
+fi

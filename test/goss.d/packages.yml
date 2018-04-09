@@ -1,0 +1,5 @@
+---
+package:
+  'openssl':
+    installed: true
+    versions: [1.0.1k]

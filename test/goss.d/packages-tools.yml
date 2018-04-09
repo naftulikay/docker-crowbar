@@ -1,0 +1,24 @@
+---
+package:
+  'autoconf':         { installed: true }
+  'automake':         { installed: true }
+  'cmake':            { installed: true }
+  'curl':             { installed: true }
+  'file':             { installed: true }
+  'gcc':              { installed: true }
+  'git':              { installed: true }
+  'jq':               { installed: true }
+  'libtool':          { installed: true }
+  'make':             { installed: true }
+  'man-db':           { installed: true }
+  'man-pages':        { installed: true }
+  'pcre-tools':       { installed: true }
+  'pkgconfig':        { installed: true }
+  'python26-pip':     { installed: true }
+  'python34-pip':     { installed: true }
+  'sudo':             { installed: true }
+  'tree':             { installed: true }
+  'unzip':            { installed: true }
+  'wget':             { installed: true }
+  'which':            { installed: true }
+  'zip':              { installed: true }

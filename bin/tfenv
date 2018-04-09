@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+function .usage() {
+  (
+    echo "$0 VERSION"
+    echo "Installs the given version of Terraform."
+  ) >&2
+  exit 1
+}
+
+function .main() {
+  if [ -z "$1" ]; then
+    .usage
+  fi
+
+  local version="$1"
+  local destdir="$HOME/.local/lib/terraform/${version}"
+
+  if [ ! -d "${destdir}" ]; then
+    echo "Installing Terraform ${version} to ${destdir}..."
+
+    mkdir -p "${destdir}"
+    local tmpfile="$(mktemp --suffix ".zip")"
+    curl -sSL -o "${tmpfile}" "https://releases.hashicorp.com/terraform/${version}/terraform_${version}_linux_amd64.zip"
+    unzip "$tmpfile" -d "${destdir}"
+    chmod 0755 "${destdir}/terraform"
+    rm "$tmpfile"
+  fi
+
+  ln -sf "${destdir}/terraform" "$HOME/.local/bin/terraform"
+}
+
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+  set -e
+  .main $@
+fi

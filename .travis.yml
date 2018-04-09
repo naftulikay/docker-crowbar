@@ -1,0 +1,25 @@
+---
+dist: trusty
+
+matrix:
+  fast_finish: true
+
+services:
+  - docker
+
+install: true
+
+script:
+  - docker build -t naftulikay/crowbar .
+
+deploy:
+  - provider: script
+    script: |
+      curl -H "Content-Type: application/json" --data '{"build": true}' -X POST https://registry.hub.docker.com/u/naftulikay/crowbar/trigger/46510d7e-0da8-4595-ab4a-9fc5594db01f/
+    on:
+      branch: master
+
+notifications:
+  email:
+    on_success: never
+    on_failure: never
